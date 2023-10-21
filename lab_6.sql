@@ -29,8 +29,25 @@ INSERT INTO `lines` (`id`, `name`, `color`) VALUES
 (2,	'Blue Metro Line',	'blue'),
 (3,	'Green Metro Line',	'green');
 
-DROP TABLE IF EXISTS `routes`;
-CREATE TABLE `routes` (
+DROP TABLE IF EXISTS `stations`;
+CREATE TABLE `stations` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` char(100) NOT NULL,
+  `line_id` int(10) unsigned NOT NULL,
+  `prev_station_id` int(11) DEFAULT NULL,
+  `next_station_id` int(11) DEFAULT NULL,
+  `latitude` decimal(10,0) DEFAULT NULL,
+  `longitude` decimal(10,0) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `stations` (`id`, `name`, `line_id`, `prev_station_id`, `next_station_id`, `latitude`, `longitude`) VALUES
+(1,	'Vokzalna',	1,	0,	2,	12,	14),
+(2,	'Maidan Nezalezhnosti',	2,	4,	6,	20,	24),
+(3,	'Zoloti Vorota',	3,	8,	10,	18,	22);
+
+DROP TABLE IF EXISTS `transfers`;
+CREATE TABLE `transfers` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `station_id_from` int(10) unsigned NOT NULL,
   `station_id_to` int(10) unsigned NOT NULL,
@@ -39,37 +56,8 @@ CREATE TABLE `routes` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `routes` (`id`, `station_id_from`, `station_id_to`, `length`, `travel_time`) VALUES
+INSERT INTO `transfers` (`id`, `station_id_from`, `station_id_to`, `length`, `travel_time`) VALUES
 (1,	1,	2,	2,	'00:02:03'),
 (2,	16,	17,	1,	NULL),
 (3,	22,	23,	NULL,	'00:03:15');
-
-DROP TABLE IF EXISTS `stations`;
-CREATE TABLE `stations` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` char(100) NOT NULL,
-  `line_id` int(10) unsigned NOT NULL,
-  `line_color` char(100) DEFAULT NULL,
-  `latitude` decimal(10,0) NOT NULL,
-  `longitude` decimal(10,0) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-INSERT INTO `stations` (`id`, `name`, `line_id`, `line_color`, `latitude`, `longitude`) VALUES
-(1,	'Vokzalna',	1,	'red',	12,	14),
-(2,	'Maidan Nezalezhnosti',	2,	'blue',	20,	24),
-(3,	'Zoloti Vorota',	3,	'green',	18,	22);
-
-DROP TABLE IF EXISTS `transfers`;
-CREATE TABLE `transfers` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `station_id_from` int(10) unsigned NOT NULL,
-  `station_id_to` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-INSERT INTO `transfers` (`id`, `station_id_from`, `station_id_to`) VALUES
-(1,	1,	16),
-(2,	17,	24),
-(3,	4,	13);
 
