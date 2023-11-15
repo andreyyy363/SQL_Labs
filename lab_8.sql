@@ -9,13 +9,18 @@ CREATE TABLE `files` (
   `name` varchar(128) NOT NULL,
   `link` varchar(128) NOT NULL,
   `task_id` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `project_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `task_id` (`task_id`),
+  KEY `project_id` (`project_id`),
+  CONSTRAINT `files_ibfk_1` FOREIGN KEY (`task_id`) REFERENCES `tasks` (`id`),
+  CONSTRAINT `files_ibfk_2` FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `files` (`id`, `name`, `link`, `task_id`) VALUES
-(1,	'File 1',	'/file/link1',	1),
-(2,	'File 2',	'/file/link2',	2),
-(3,	'File 3',	'/file/link3',	NULL);
+INSERT INTO `files` (`id`, `name`, `link`, `task_id`, `project_id`) VALUES
+(1,	'File 1',	'/file/link1',	1,	2),
+(2,	'File 2',	'/file/link2',	2,	2),
+(3,	'File 3',	'/file/link3',	NULL,	1);
 
 DROP TABLE IF EXISTS `projects`;
 CREATE TABLE `projects` (
@@ -28,6 +33,23 @@ CREATE TABLE `projects` (
 INSERT INTO `projects` (`id`, `name`, `description`) VALUES
 (1,	'Project 1',	'Description of Project 1'),
 (2,	'Project 2',	'Description of Project 2');
+
+DROP TABLE IF EXISTS `project_members`;
+CREATE TABLE `project_members` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `project_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  KEY `project_id` (`project_id`),
+  CONSTRAINT `project_members_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `project_members_ibfk_2` FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `project_members` (`id`, `user_id`, `project_id`) VALUES
+(2,	1,	1),
+(4,	2,	1),
+(6,	1,	2);
 
 DROP TABLE IF EXISTS `tasks`;
 CREATE TABLE `tasks` (
